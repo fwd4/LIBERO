@@ -11,9 +11,30 @@ with open(path.join(this_directory, "./README.md"), encoding="utf-8") as f:
 lines = [x for x in lines if ".png" not in x]
 long_description = "".join(lines)
 
+# Find all packages, but exclude data directories that aren't real packages
+all_packages = find_packages()
+packages = [
+    pkg for pkg in all_packages
+    if not any([
+        pkg.startswith("libero.libero.assets."),
+        pkg.startswith("libero.libero.bddl_files."),
+        pkg.startswith("libero.libero.init_files."),
+        # Exclude config subdirectories (they only contain YAML files)
+        pkg.startswith("libero.configs.") and pkg != "libero.configs",
+    ])
+]
+
 setup(
     name="libero",
-    packages=[package for package in find_packages() if package.startswith("libero")],
+    packages=packages,
+    package_data={
+        "libero.libero": [
+            "assets/**/*",
+            "bddl_files/**/*",
+            "init_files/**/*",
+        ],
+        "libero.configs": ["*.yaml", "**/*.yaml"],
+    },
     install_requires=[],
     eager_resources=["*"],
     include_package_data=True,

@@ -117,7 +117,7 @@ class Benchmark(abc.ABC):
         if self.name == "libero_90":
             self.tasks = tasks
         else:
-            print(f"[info] using task orders {task_orders[self.task_order_index]}")
+            # print(f"[info] using task orders {task_orders[self.task_order_index]}")
             self.tasks = [tasks[i] for i in task_orders[self.task_order_index]]
         self.n_tasks = len(self.tasks)
 
@@ -161,7 +161,7 @@ class Benchmark(abc.ABC):
             self.tasks[i].problem_folder,
             self.tasks[i].init_states_file,
         )
-        init_states = torch.load(init_states_path)
+        init_states = torch.load(init_states_path, weights_only=False)
         return init_states
 
     def set_task_embs(self, task_embs):
